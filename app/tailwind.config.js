@@ -3,8 +3,12 @@ export default {
   content: [],
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#F19C40',
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }
 
