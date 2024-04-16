@@ -50,7 +50,7 @@ const fetchUser = async () => {
 </script>
 
 <template>
-    <aside class="fixed z-50 left-0 w-[363px] h-screen border-r border-r-gray-200 p-6">
+    <aside class="fixed z-50 left-0 w-[363px] h-screen border-r bg-white border-r-gray-200 p-6">
         <!-- Profile -->
         <div class="flex items-center space-x-4">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"

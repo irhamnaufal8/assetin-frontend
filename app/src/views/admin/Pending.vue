@@ -76,40 +76,41 @@ onMounted(() => {
         </div>
 
         <!-- Chips for filtering -->
-        <div class="flex space-x-3 mb-4 pt-[100px]">
+        <div v-if="TokenService.isSuperAdmin()" class="flex space-x-3 mb-4 pt-[100px]">
             <button class="btn" :class="currentTab === 'all' ? 'bg-primary text-white' : ''"
                 @click="fetchPendingUsers('all')">All</button>
             <button class="btn" :class="currentTab === 'siswa' ? 'bg-primary text-white' : ''"
                 @click="fetchPendingUsers('siswa')">Student</button>
-            <button v-if="TokenService.isSuperAdmin()" class="btn"
-                :class="currentTab === 'admin' ? 'bg-primary text-white' : ''"
+            <button class="btn" :class="currentTab === 'admin' ? 'bg-primary text-white' : ''"
                 @click="fetchPendingUsers('admin')">Admin</button>
         </div>
 
         <!-- Table for displaying users -->
-        <table v-if="pendingUsers.length" class="table w-full text-center">
-            <thead>
-                <tr>
-                    <th class="w-1/3">Name</th>
-                    <th class="w-1/6">Email</th>
-                    <th class="w-1/6">Role</th>
-                    <th class="w-1/6">NIS/NIP</th>
-                    <th class="w-1/6">Approve</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="user in pendingUsers" :key="user.id">
-                    <td class="text-left pl-4">{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>{{ user.role === 'siswa' ? user.nis : user.nip }}</td>
-                    <td>
-                        <button class="btn bg-green-500 text-white" @click="openApproveModal(user)">Approve</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p v-else class="text-center mt-8">There's no pending user here.</p>
+        <div :class="TokenService.isAdmin() ? 'pt-[100px]' : ''">
+            <table v-if="pendingUsers.length" class="table w-full text-center">
+                <thead>
+                    <tr>
+                        <th class="w-1/3">Name</th>
+                        <th class="w-1/6">Email</th>
+                        <th class="w-1/6">Role</th>
+                        <th class="w-1/6">NIS/NIP</th>
+                        <th class="w-1/6">Approve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user in pendingUsers" :key="user.id">
+                        <td class="text-left pl-4">{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.role === 'siswa' ? user.nis : user.nip }}</td>
+                        <td>
+                            <button class="btn bg-green-500 text-white" @click="openApproveModal(user)">Approve</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p v-else class="text-center mt-8">There's no pending user here.</p>
+        </div>
     </div>
 
     <!-- Modal for confirmation -->
