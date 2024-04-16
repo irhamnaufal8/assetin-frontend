@@ -3,6 +3,22 @@ import Axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { baseURL } from '../config';
+import TokenService from '../services/TokenService';
+import { onMounted } from 'vue';
+
+// To Home Page
+const toHome = () => {
+  if ((TokenService.getToken()) && (TokenService.getRole() === 'admin' || TokenService.getRole() === 'superadmin')) {
+    router.push('/dashboard');
+  } else if ((TokenService.getToken()) && (TokenService.getRole() === 'siswa')) {
+    router.push('/home');
+  }
+};
+
+// Check if user is already logged in
+onMounted(() => {
+  toHome();
+})
 
 // Setup instance Axios
 const axiosInstance = Axios.create({
@@ -38,12 +54,13 @@ const login = async () => {
       password: password.value,
       role: role.value
     });
-    modalTitle.value = "Login Successful";
-    modalDescription.value = response.data.message;
-    modalIcon.value = '🎉';
-    showModal.value = true;
-    // Optional: Redirect or other actions
-    // router.push('/dashboard');
+    TokenService.setToken(response.data.access_token);
+    if (email.value === 'superadmin@mail.com') {
+      TokenService.setRole('superadmin');
+    } else {
+      TokenService.setRole(role.value);
+    }
+    toHome();
   } catch (err) {
     modalTitle.value = "Login Failed";
     modalDescription.value = err.response.data.message || 'An error occurred during login.';
@@ -70,12 +87,14 @@ const register = async () => {
       role: role.value
     };
     const response = await axiosInstance.post('/register', request);
+    modalIcon.value = '🎉';
     modalTitle.value = "Registration Successful";
     modalDescription.value = "Please wait for approval from the admin before you can Sign In.";
     showModal.value = true;
   } catch (err) {
+    modalIcon.value = '⚠️';
     modalTitle.value = "Registration Failed";
-    modalDescription.value = err.response.data.message || 'An error occurred during registration.';
+    modalDescription.value = err || 'An error occurred during registration.';
     showModal.value = true;
   }
 };
@@ -108,13 +127,13 @@ const register = async () => {
       <div v-if="view === 'choose'" class="flex flex-col items-center">
         <div class="flex flex-row justify-center items-center space-x-4 mb-6">
           <button @click="setRole('siswa')"
-            class="flex flex-col items-center p-8 border border-primary text-xl font-bold rounded-2xl"
+            class="flex flex-col items-center p-8 border border-primary text-xl font-bold rounded-2xl hover:bg-orange-100 transition-colors"
             style="padding: 80px 70px; min-width: 200px;">
             <span class="text-5xl mb-2">🎓</span>
             <span>Student</span>
           </button>
           <button @click="setRole('admin')"
-            class="flex flex-col items-center p-8 border border-primary text-xl font-bold rounded-2xl"
+            class="flex flex-col items-center p-8 border border-primary text-xl font-bold rounded-2xl hover:bg-orange-100 transition-colors"
             style="padding: 80px 70px; min-width: 200px;">
             <span class="text-5xl mb-2">👔</span>
             <span>Admin</span>
@@ -125,7 +144,7 @@ const register = async () => {
       </div>
 
       <!-- Login View -->
-      <div v-else-if="view === 'login'" class="flex flex-col items-center space-y-4">
+      <div v-else-if="view === 'login'" class="w-full flex flex-col items-center space-y-4">
         <img src="/assets/logo.svg" alt="Logo" class="mb-4">
         <input type="email" placeholder="Email" v-model="email"
           class="input input-bordered w-full max-w-lg focus:border-primary focus:ring-primary">
@@ -139,7 +158,7 @@ const register = async () => {
       </div>
 
       <!-- Register View -->
-      <div v-else-if="view === 'register'" class="flex flex-col items-center space-y-4">
+      <div v-else-if="view === 'register'" class="w-full flex flex-col items-center space-y-4">
         <img src="/assets/logo.svg" alt="Logo" class="mb-4">
         <input type="text" placeholder="Name" v-model="name"
           class="input input-bordered w-full max-w-lg focus:border-primary focus:ring-primary">

@@ -6,8 +6,14 @@ const routes = [
         component: () => import('@/Index.vue')
     },
     {
-        path: '/create',
-        component: () => import('@/Create.vue')
+        path: '/dashboard',
+        component: () => import('@/admin/Dashboard.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/home',
+        component: () => import('@/student/Home.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 
