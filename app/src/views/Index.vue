@@ -8,9 +8,9 @@ import { onMounted } from 'vue';
 
 // To Home Page
 const toHome = () => {
-  if ((TokenService.getToken()) && (TokenService.getRole() === 'admin' || TokenService.getRole() === 'superadmin')) {
-    router.push('/dashboard');
-  } else if ((TokenService.getToken()) && (TokenService.getRole() === 'siswa')) {
+  if (TokenService.isAdmin() || TokenService.isSuperAdmin()) {
+    router.push('/pending');
+  } else if (TokenService.isStudent()) {
     router.push('/home');
   }
 };

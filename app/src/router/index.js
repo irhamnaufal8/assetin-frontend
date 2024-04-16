@@ -6,8 +6,8 @@ const routes = [
         component: () => import('@/Index.vue')
     },
     {
-        path: '/dashboard',
-        component: () => import('@/admin/Dashboard.vue'),
+        path: '/pending',
+        component: () => import('@/admin/Pending.vue'),
         meta: { requiresAuth: true }
     },
     {

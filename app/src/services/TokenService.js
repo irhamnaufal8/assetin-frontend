@@ -25,4 +25,16 @@ export const removeRole = () => {
     localStorage.removeItem(ID_ROLE)
 }
 
-export default { getToken, setToken, removeToken, getRole, setRole, removeRole }
+export const isSuperAdmin = () => {
+    return getRole() === 'superadmin'
+}
+
+export const isAdmin = () => {
+    return getRole() === 'admin'
+}
+
+export const isStudent = () => {
+    return getRole() === 'siswa'
+}
+
+export default { getToken, setToken, removeToken, getRole, setRole, removeRole, isSuperAdmin, isAdmin, isStudent }

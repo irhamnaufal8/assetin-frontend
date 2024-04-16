@@ -50,7 +50,7 @@ const fetchUser = async () => {
 </script>
 
 <template>
-    <aside class="fixed left-0 w-[363px] h-screen border-r border-r-gray-200 p-6">
+    <aside class="fixed z-50 left-0 w-[363px] h-screen border-r border-r-gray-200 p-6">
         <!-- Profile -->
         <div class="flex items-center space-x-4">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -65,11 +65,22 @@ const fetchUser = async () => {
         <!-- Navigation -->
         <ul class="w-full flex flex-col h-full text-base-content">
             <div class="flex flex-col gap-3">
-                <RouterLink to="/home" class="btn justify-start shadow-none border-none"
-                    :class="route.path === '/home' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
-                    <span class="material-symbols-outlined">home</span>
-                    Home
-                </RouterLink>
+
+                <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
+                    <RouterLink to="/pending" class="btn justify-start shadow-none border-none w-full"
+                        :class="route.path === '/pending' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        <span class="material-symbols-outlined">pending_actions</span>
+                        Pending Users
+                    </RouterLink>
+                </div>
+
+                <div v-if="TokenService.isStudent()" class="w-full">
+                    <RouterLink to="/home" class="btn justify-start shadow-none border-none w-full"
+                        :class="route.path === '/home' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        <span class="material-symbols-outlined">home</span>
+                        Home
+                    </RouterLink>
+                </div>
 
                 <RouterLink to="/history" class="btn justify-start shadow-none border-none"
                     :class="route.path === '/history' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
