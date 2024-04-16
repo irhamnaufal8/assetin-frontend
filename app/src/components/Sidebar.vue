@@ -52,14 +52,16 @@ const fetchUser = async () => {
 <template>
     <aside class="fixed z-50 left-0 w-[363px] h-screen border-r bg-white border-r-gray-200 p-6">
         <!-- Profile -->
-        <div class="flex items-center space-x-4">
-            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                alt="Profile Picture" class="rounded-full w-20 h-20">
-            <div>
-                <div class="font-bold">{{ user.name }}</div>
-                <div class="text-sm opacity-50">{{ user.email }}</div>
+        <RouterLink to="/profile" class="flex items hover:bg-orange-50 transition-colors rounded-lg p-3">
+            <div class="flex items-center space-x-4">
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    alt="Profile Picture" class="rounded-full w-20 h-20">
+                <div>
+                    <div class="font-bold">{{ user.name }}</div>
+                    <div class="text-sm opacity-50">{{ user.email }}</div>
+                </div>
             </div>
-        </div>
+        </RouterLink>
         <hr class="my-8">
 
         <!-- Navigation -->
