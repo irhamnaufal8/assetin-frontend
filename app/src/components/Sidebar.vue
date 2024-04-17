@@ -72,6 +72,14 @@ const fetchUser = async () => {
             <div class="flex flex-col gap-3">
 
                 <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
+                    <RouterLink to="/loans" class="btn justify-start shadow-none border-none w-full"
+                        :class="route.path === '/loans' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        <span class="material-symbols-outlined">edit_document</span>
+                        Loans
+                    </RouterLink>
+                </div>
+
+                <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
                     <RouterLink to="/pending" class="btn justify-start shadow-none border-none w-full"
                         :class="route.path === '/pending' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
                         <span class="material-symbols-outlined">pending_actions</span>

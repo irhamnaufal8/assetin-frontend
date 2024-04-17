@@ -6,6 +6,11 @@ const routes = [
         component: () => import('@/Index.vue')
     },
     {
+        path: '/loans',
+        component: () => import('@/admin/Loans.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/pending',
         component: () => import('@/admin/Pending.vue'),
         meta: { requiresAuth: true }
