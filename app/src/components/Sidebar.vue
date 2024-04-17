@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import { useRouter, useRoute } from 'vue-router';
 import Axios from 'axios';
 import TokenService from '../services/TokenService';
-import { baseURL } from '../config';
+import { baseURL, defaultAvatar, getImage } from '../config';
 
 // Variables
 const route = useRoute();
@@ -32,6 +32,10 @@ const logout = async () => {
     showLogoutModal.value = false;
 };
 
+const getImageUrl = (avatarPath) => {
+    return avatarPath ? getImage(avatarPath) : defaultAvatar;
+};
+
 onMounted(() => {
     fetchUser();
 });
@@ -54,8 +58,7 @@ const fetchUser = async () => {
         <!-- Profile -->
         <RouterLink to="/profile" class="flex items hover:bg-orange-50 transition-colors rounded-lg p-3">
             <div class="flex items-center space-x-4">
-                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                    alt="Profile Picture" class="rounded-full w-20 h-20">
+                <img :src=getImageUrl(user.avatar) alt="Profile Picture" class="rounded-full w-20 h-20 object-cover">
                 <div>
                     <div class="font-bold">{{ user.name }}</div>
                     <div class="text-sm opacity-50">{{ user.email }}</div>
