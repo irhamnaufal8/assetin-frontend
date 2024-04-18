@@ -1,9 +1,9 @@
 <script setup>
 import Sidebar from '../../components/Sidebar.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import Axios, { all } from 'axios';
 import TokenService from '../../services/TokenService';
-import { baseURL, getImage, formatDate } from '../../config';
+import { baseURL, getImage, formatDate, formatDateForPicker, formatDateForRequest } from '../../config';
 
 // Setup Axios
 const axiosInstance = Axios.create({
@@ -33,6 +33,77 @@ const fetchLoans = async (input) => {
         console.error('Fetch loans failed', error);
     }
 };
+
+// Confirmation Modal
+const showModal = ref(false);
+const openModal = (loan) => {
+    loanToEdit.value = loan;
+    loanToEdit.value.due_date = formatDateForPicker(loan.due_date);
+    showModal.value = true;
+};
+
+// Disable Approve Button
+const isDisabled = computed(() => {
+    if (status.value === 'REQUEST') {
+        return loanToEdit.value.quantity > loanToEdit.value.inventory.quantity_available ||
+            !loanToEdit.value.pickupLocation || loanToEdit.value.quantity <= 0 || !loanToEdit.value.due_date ||
+            loanToEdit.value.due_date < new Date().toISOString();
+    } else {
+        return false;
+    }
+});
+
+// Approve Loan
+const approveAction = () => {
+    if (status.value === 'REQUEST') {
+        approveLoan();
+    } else if (status.value === 'READY') {
+        startLoan();
+    } else if (status.value === 'ON-GOING') {
+        finishLoan();
+    }
+};
+
+const approveLoan = async () => {
+    try {
+        await axiosInstance.post(`/loans/${loanToEdit.value.id}/approve`, {
+            quantity: loanToEdit.value.quantity,
+            due_date: formatDateForRequest(loanToEdit.value.due_date),
+            pickup_location: loanToEdit.value.pickupLocation
+        }, bearerToken);
+        showModal.value = false;
+        fetchLoans(status.value);
+    } catch (error) {
+        console.error('Approval failed', error);
+    }
+};
+
+const startLoan = async () => {
+    try {
+        await axiosInstance.post(`/loans/${loanToEdit.value.id}/start`, {}, bearerToken);
+        showModal.value = false;
+        fetchLoans(status.value);
+    } catch (error) {
+        console.error('Start loan failed', error);
+    }
+};
+
+const finishLoan = async () => {
+    try {
+        await axiosInstance.post(`/loans/${loanToEdit.value.id}/finish`, {}, bearerToken);
+        showModal.value = false;
+        fetchLoans(status.value);
+    } catch (error) {
+        console.error('Finish loan failed', error);
+    }
+};
+
+// List Button Text
+const listButtonText = computed(() => {
+    return status.value === 'REQUEST' ? 'Approve' :
+        status.value === 'READY' ? 'Borrowed' :
+            status.value === 'ON-GOING' ? 'Done' : '';
+});
 
 onMounted(() => {
     fetchLoans('REQUEST');
@@ -66,10 +137,9 @@ onMounted(() => {
         <table v-if="loans.length" class="table w-full text-center">
             <thead>
                 <tr>
-                    <th class="w-1/6">Image</th>
-                    <th class="w-1/6">Inventory</th>
+                    <th class="w-1/3">Inventory</th>
                     <th class="w-1/6">Quantity</th>
-                    <th class="w-1/6">Date</th>
+                    <th class="w-1/6">Due Date</th>
                     <th class="w-1/6">Name</th>
                     <th class="w-1/6">NIS</th>
                 </tr>
@@ -77,20 +147,89 @@ onMounted(() => {
             <tbody>
                 <tr v-for="item in loans" :key="item.id">
                     <td>
-                        <img :src="item.inventory.photo" alt="Inventory Image"
-                            class="h-20 w-20 rounded-full object-cover">
+                        <div class="flex items-center font-bold">
+                            <img :src="item.inventory.photo" alt="Inventory Image"
+                                class="h-20 w-20 rounded-full object-cover">
+                            {{ item.inventory.name }}
+                        </div>
                     </td>
-                    <td>{{ item.inventory.name }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ formatDate(item.due_date) }}</td>
                     <td>{{ item.user.name }}</td>
                     <td>{{ item.user.role === 'siswa' ? item.user.nis : item.user.nip }}</td>
                     <td>
-                        <button class="btn bg-green-500 text-white" @click="openApproveModal(user)">Approve</button>
+                        <button class="btn bg-green-500 text-white" @click="openModal(item)">{{ listButtonText
+                            }}</button>
                     </td>
                 </tr>
             </tbody>
         </table>
         <p v-else class="text-center mt-8">There's no data here.</p>
+
+        <!-- Modal for confirmation -->
+        <div v-if="showModal" class="modal modal-open">
+            <div class="modal-box">
+                <button @click="showModal = false" class="mb-4">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <p class="text-sm font-medium text-gray-400">Requested by
+                </p>
+                <div class="flex items-center gap-1 font-bold text-lg">
+                    <h3>{{ loanToEdit.user.name }}</h3>
+                    <p class="text-primary font-medium">({{ loanToEdit.user.role == 'siswa' ?
+                loanToEdit.user.nis
+                :
+                loanToEdit.user.nip }})</p>
+                </div>
+                <hr class="my-4">
+                <div class="flex">
+                    <img :src="loanToEdit.inventory.photo" alt="Inventory Image"
+                        class="h-32 w-32 rounded-full object-cover">
+                    <div class="w-full">
+
+                        <h3 class="font-bold text-lg mb-1">{{ loanToEdit.inventory.name }}</h3>
+                        <div class="flex gap-2 mr-2">
+                            <div>
+                                <p class="text-sm font-medium text-gray-400 mb-1">Quantity</p>
+                                <input type="text" v-model="loanToEdit.quantity"
+                                    class="input input-bordered focus:border-primary focus:ring-primary w-full"
+                                    :disabled="status !== 'REQUEST'" />
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-medium text-gray-400 mb-1">Avilable</p>
+                                <input type="text" v-model="loanToEdit.inventory.quantity_available"
+                                    class="input input-bordered w-full" disabled />
+                            </div>
+                        </div>
+
+                        <div v-if="status === 'REQUEST'" class="flex gap-2 mt-2">
+                            <div class="w-full">
+                                <p class="text-sm font-medium text-gray-400 mb-1">Due Date</p>
+                                <input type="datetime-local" v-model="loanToEdit.due_date"
+                                    class="input input-bordered focus:border-primary focus:ring-primary w-full" />
+                            </div>
+                        </div>
+
+                        <div v-if="status === 'REQUEST'" class="mt-2">
+                            <p class="text-sm font-medium text-gray-400 mb-1">Pickup Location</p>
+                            <select v-model="loanToEdit.pickupLocation" class="select select-bordered w-full">
+                                <option disabled value="">Please select a location</option>
+                                <option value="Music Room">Music Room</option>
+                                <option value="Laboratory">Laboratory</option>
+                                <option value="Administrative Room">Administrative Room</option>
+                                <option value="Library">Library</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Sports Room">Sports Room</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-action">
+                    <button class="btn bg-primary text-white w-full" @click="approveAction" :disabled="isDisabled">{{
+                        listButtonText }}</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
