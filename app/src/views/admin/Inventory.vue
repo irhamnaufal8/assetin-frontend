@@ -19,6 +19,7 @@ const inventories = ref([]);
 const category = ref(null);
 const inventoryToEdit = ref(null);
 
+
 const fetchInventories = async (input) => {
     category.value = input;
     try {
@@ -34,12 +35,81 @@ const fetchInventories = async (input) => {
     }
 };
 
+// File Input
+const previewImage = ref(null);
+const fileInput = ref(null);
+const hover = ref(false);
+
+const triggerFileInput = () => {
+    fileInput.value.click();
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// Update Inventory Main Action
+const updateAction = () => {
+    if (previewImage.value) {
+        uploadPhoto(fileInput.value.files[0]);
+    } else {
+        updateInventory('NO_IMAGE');
+    }
+};
+
+// Upload Photo
+const uploadPhoto = async (file) => {
+    const formData = new FormData();
+    formData.append('photo', file);
+    try {
+        const response = await axiosInstance.post('/photos', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${TokenService.getToken()}`
+            }
+        });
+        updateInventory(response.data.path);
+    } catch (error) {
+        console.error('Upload photo failed', error);
+    }
+};
+
+// Update Inventory
+const updateInventory = async (image) => {
+    if (image !== 'NO_IMAGE') inventoryToEdit.value.photo = image;
+    const body = {
+        name: inventoryToEdit.value.name,
+        category_id: inventoryToEdit.value.category_id,
+        quantity_available: inventoryToEdit.value.quantity_available,
+        photo: inventoryToEdit.value.photo
+    };
+    try {
+        if (modal.value.type === 'add') {
+            await axiosInstance.post('/inventories', body, bearerToken);
+        } else if (modal.value.type === 'edit') {
+            await axiosInstance.put(`/inventories/${inventoryToEdit.value.id}`, body, bearerToken);
+        }
+        fetchInventories(category.value);
+        modal.value.show = false;
+    } catch (error) {
+        console.error('Update inventory failed', error);
+    }
+}
+
 // Detail Modal
 const modal = ref({
     show: false,
     type: 'add'
 });
 const openModal = (type, inventory) => {
+    previewImage.value = null;
     inventoryToEdit.value = inventory;
     modal.value = {
         show: true,
@@ -49,7 +119,7 @@ const openModal = (type, inventory) => {
 
 // Disable Main Button
 const isDisabled = computed(() => {
-    return !inventoryToEdit.value.name || !inventoryToEdit.value.category_id || !inventoryToEdit.value.quantity_available || !inventoryToEdit.value.photo;
+    return !inventoryToEdit.value.name || !inventoryToEdit.value.category_id || !inventoryToEdit.value.quantity_available || (!inventoryToEdit.value.photo && !previewImage.value);
 });
 
 onMounted(() => {
@@ -128,8 +198,19 @@ onMounted(() => {
                 </button>
 
                 <div class="flex items-center gap-3">
-                    <img :src="inventoryToEdit.photo ? getImage(inventoryToEdit.photo) : 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'"
-                        class="w-40 h-40 object-cover rounded-lg">
+                    <div>
+                        <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" hidden>
+                        <button class="w-40 h-40 relative" @click="triggerFileInput" @mouseover="hover = true"
+                            @mouseleave="hover = false">
+                            <img :src="previewImage || (inventoryToEdit.photo ? getImage(inventoryToEdit.photo) : 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg')"
+                                class="w-40 h-40 object-cover rounded-lg">
+                            <div v-show="hover"
+                                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-semibold rounded-lg">
+                                {{ modal.type }}
+                            </div>
+                        </button>
+                    </div>
+
                     <div class="w-full">
                         <div>
                             <p class="text-sm font-medium text-gray-400 mb-1">Inventory Name</p>
@@ -159,8 +240,7 @@ onMounted(() => {
                 </div>
 
                 <div class="modal-action">
-                    <button class="btn bg-primary text-white w-full" @click="modal.show = false"
-                        :disabled="isDisabled">{{
+                    <button class="btn bg-primary text-white w-full" @click="updateAction" :disabled="isDisabled">{{
                     modal.type === 'add' ? 'Create Inventory' : 'Edit Inventory' }}</button>
                 </div>
             </div>
