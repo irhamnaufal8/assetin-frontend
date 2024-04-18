@@ -70,6 +70,13 @@ const fetchUser = async () => {
         <!-- Navigation -->
         <ul class="w-full flex flex-col h-full text-base-content">
             <div class="flex flex-col gap-3">
+                <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
+                    <RouterLink to="/inventory" class="btn justify-start shadow-none border-none w-full"
+                        :class="route.path === '/inventory' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        <span class="material-symbols-outlined">inventory_2</span>
+                        Inventories
+                    </RouterLink>
+                </div>
 
                 <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
                     <RouterLink to="/loans" class="btn justify-start shadow-none border-none w-full"

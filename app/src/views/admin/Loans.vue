@@ -1,7 +1,7 @@
 <script setup>
 import Sidebar from '../../components/Sidebar.vue';
 import { onMounted, ref, computed } from 'vue';
-import Axios, { all } from 'axios';
+import Axios from 'axios';
 import TokenService from '../../services/TokenService';
 import { baseURL, getImage, formatDate, formatDateForPicker, formatDateForRequest } from '../../config';
 
@@ -137,7 +137,8 @@ onMounted(() => {
         <table v-if="loans.length" class="table w-full text-center">
             <thead>
                 <tr>
-                    <th class="w-1/3">Inventory</th>
+                    <th class="w-1/6">Image</th>
+                    <th class="w-1/6">Inventory</th>
                     <th class="w-1/6">Quantity</th>
                     <th class="w-1/6">Due Date</th>
                     <th class="w-1/6">Name</th>
@@ -146,13 +147,11 @@ onMounted(() => {
             </thead>
             <tbody>
                 <tr v-for="item in loans" :key="item.id">
-                    <td>
-                        <div class="flex items-center font-bold">
-                            <img :src="item.inventory.photo" alt="Inventory Image"
-                                class="h-20 w-20 rounded-full object-cover">
-                            {{ item.inventory.name }}
-                        </div>
+                    <td class="flex justify-center">
+                        <img :src="getImage(item.inventory.photo)" alt="Inventory Image"
+                            class="h-20 w-20 rounded-full object-cover">
                     </td>
+                    <td>{{ item.inventory.name }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ formatDate(item.due_date) }}</td>
                     <td>{{ item.user.name }}</td>
@@ -183,7 +182,7 @@ onMounted(() => {
                 </div>
                 <hr class="my-4">
                 <div class="flex">
-                    <img :src="loanToEdit.inventory.photo" alt="Inventory Image"
+                    <img :src="getImage(loanToEdit.inventory.photo)" alt="Inventory Image"
                         class="h-32 w-32 rounded-full object-cover">
                     <div class="w-full">
 

@@ -6,6 +6,11 @@ const routes = [
         component: () => import('@/Index.vue')
     },
     {
+        path: '/inventory',
+        component: () => import('@/admin/Inventory.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/loans',
         component: () => import('@/admin/Loans.vue'),
         meta: { requiresAuth: true }
