@@ -9,7 +9,7 @@ import { onMounted } from 'vue';
 // To Home Page
 const toHome = () => {
   if (TokenService.isAdmin() || TokenService.isSuperAdmin()) {
-    router.push('/pending');
+    router.push('/inventory');
   } else if (TokenService.isStudent()) {
     router.push('/home');
   }
