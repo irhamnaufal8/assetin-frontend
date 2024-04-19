@@ -56,7 +56,8 @@ const fetchUser = async () => {
 <template>
     <aside class="fixed z-50 left-0 w-[363px] h-screen border-r bg-white border-r-gray-200 p-6">
         <!-- Profile -->
-        <RouterLink to="/profile" class="flex items hover:bg-orange-50 transition-colors rounded-lg p-3">
+        <RouterLink to="/profile" class="flex items hover:bg-orange-50 transition-colors rounded-lg p-3"
+            :class="route.path === '/profile' ? 'bg-orange-50' : ''">
             <div class="flex items-center space-x-4">
                 <img :src=getImageUrl(user.avatar) alt="Profile Picture" class="rounded-full w-20 h-20 object-cover">
                 <div>

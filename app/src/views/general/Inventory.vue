@@ -3,7 +3,7 @@ import Sidebar from '../../components/Sidebar.vue';
 import { onMounted, ref, computed } from 'vue';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
-import { baseURL, getImage } from '../../config';
+import { baseURL, getImage, formatDateForRequest } from '../../config';
 import { useRoute } from 'vue-router';
 
 // Setup Axios
@@ -115,6 +115,32 @@ const deleteAction = async () => {
     }
 };
 
+// Borrow Inventory
+const borrowAction = async () => {
+    try {
+        const response = await axiosInstance.get('/users/me', bearerToken);
+        borrowInventory(response.data.id);
+    } catch (error) {
+        console.error('Fetch user failed', error);
+    }
+};
+const borrowInventory = async (userId) => {
+    try {
+        const body = {
+            inventory_id: inventoryToEdit.value.id,
+            user_id: userId,
+            quantity: inventoryToEdit.value.quantity_available,
+            status: "REQUEST",
+            due_date: formatDateForRequest(inventoryToEdit.value.date)
+        }
+        await axiosInstance.post(`/loans`, body, bearerToken)
+        fetchInventories(category.value);
+        modal.value.show = false;
+    } catch (error) {
+        console.error('Borrow inventory failed', error)
+    }
+}
+
 // Detail Modal
 const modal = ref({
     show: false,
@@ -132,6 +158,10 @@ const openModal = (type, inventory) => {
 // Disable Main Button
 const isDisabled = computed(() => {
     return !inventoryToEdit.value.name || !inventoryToEdit.value.category_id || !inventoryToEdit.value.quantity_available || (!inventoryToEdit.value.photo && !previewImage.value);
+});
+
+const disableStudent = computed(() => {
+    return !inventoryToEdit.value.quantity_available || !inventoryToEdit.value.date || inventoryToEdit.value.date < new Date().toISOString();;
 });
 
 // Route
@@ -153,9 +183,11 @@ onMounted(() => {
         <div class="fixed z-40 right-0 left-0 pl-[403px] pr-[40px] pt-4 bg-white">
             <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-bold">Inventories</h1>
-                <button class="btn bg-primary rounded-full text-white" @click="openModal('add', {})">
+                <button v-show="!TokenService.isStudent()" class="btn bg-primary rounded-full text-white"
+                    @click="openModal('add', {})">
                     <span class="material-symbols-outlined">add</span> Add Inventory
                 </button>
+                <img v-show="TokenService.isStudent()" src="/assets/logo.svg" alt="Logo" class="h-[40px]">
             </div>
             <hr class="mt-4">
         </div>
@@ -198,11 +230,13 @@ onMounted(() => {
                     <td>{{ item.category.name }}</td>
                     <td>{{ item.quantity_available }}</td>
                     <td>
-                        <div class="flex gap-2">
+                        <div v-show="!TokenService.isStudent()" class="flex gap-2">
                             <button class="btn" @click="openModal('edit', item)">Edit</button>
                             <button class="btn bg-red-100 text-red-500"
                                 @click="openModal('delete', item)">Delete</button>
                         </div>
+                        <button v-show="TokenService.isStudent()" class="btn bg-primary text-white"
+                            @click="openModal('edit', item)">Borrow</button>
                     </td>
                 </tr>
             </tbody>
@@ -210,7 +244,7 @@ onMounted(() => {
         <p v-else class="text-center mt-8">There's no data here.</p>
 
         <!-- Modal for edit inventory -->
-        <div v-if="modal.show && modal.type !== 'delete'" class="modal modal-open">
+        <div v-if="modal.show && modal.type !== 'delete' && !TokenService.isStudent()" class="modal modal-open">
             <div class="modal-box">
                 <button @click="modal = false" class="mb-4">
                     <span class="material-symbols-outlined">close</span>
@@ -266,7 +300,7 @@ onMounted(() => {
         </div>
 
         <!-- Modal for delete inventory -->
-        <div v-if="modal.show && modal.type === 'delete'" class="modal modal-open">
+        <div v-if="modal.show && modal.type === 'delete' && !TokenService.isStudent()" class="modal modal-open">
             <div class="modal-box">
                 <p class="text-xl font-bold">Are you sure you want to delete this inventory?</p>
                 <div class="flex items-center gap-4 mt-4">
@@ -280,6 +314,42 @@ onMounted(() => {
                 <div class="modal-action">
                     <button class="btn bg-red-100 text-red-500 w-56" @click="deleteAction">Delete</button>
                     <button class="btn bg-primary text-white w-56" @click="modal = false">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for borrow inventory -->
+        <div v-if="modal.show && modal.type !== 'delete' && TokenService.isStudent()" class="modal modal-open">
+            <div class="modal-box">
+                <button @click="modal = false" class="mb-4">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+
+                <div class="flex items-center gap-3">
+                    <img :src="inventoryToEdit.photo ? getImage(inventoryToEdit.photo) : 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'"
+                        class="w-40 h-40 object-cover rounded-lg">
+
+                    <div class="w-full">
+                        <h1 class="text-xl font-bold">{{ inventoryToEdit.name }}</h1>
+                        <h2 class="font-medium text-gray-500">{{ inventoryToEdit.category.name }}</h2>
+
+                        <div class="mt-4 mb-2">
+                            <p class="text-sm font-medium text-gray-400 mb-1">Quantity</p>
+                            <input type="text" v-model="inventoryToEdit.quantity_available" placeholder="20"
+                                class="input input-bordered focus:border-primary focus:ring-primary w-full" />
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-medium text-gray-400 mb-1">Date</p>
+                            <input type="datetime-local" v-model="inventoryToEdit.date"
+                                class="input input-bordered focus:border-primary focus:ring-primary w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-action">
+                    <button class="btn bg-primary text-white w-full" @click="borrowAction"
+                        :disabled="disableStudent">Borrow</button>
                 </div>
             </div>
         </div>

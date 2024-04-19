@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     {
         path: '/',
-        component: () => import('@/Index.vue')
+        component: () => import('@/general/Index.vue')
     },
     {
         path: '/inventory/:categoryId?',
-        component: () => import('@/admin/Inventory.vue'),
+        component: () => import('@/general/Inventory.vue'),
         meta: { requiresAuth: true }
     },
     {
@@ -27,7 +27,7 @@ const routes = [
     },
     {
         path: '/profile',
-        component: () => import('@/Profile.vue'),
+        component: () => import('@/general/Profile.vue'),
         meta: { requiresAuth: true }
     }
 ]

@@ -2,8 +2,8 @@
 import Axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { baseURL } from '../config';
-import TokenService from '../services/TokenService';
+import { baseURL } from '../../config';
+import TokenService from '../../services/TokenService';
 import { onMounted } from 'vue';
 
 // To Home Page

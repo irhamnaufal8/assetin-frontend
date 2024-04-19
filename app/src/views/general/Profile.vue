@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import Axios from 'axios';
-import TokenService from '../services/TokenService';
-import { baseURL, getImage, defaultAvatar } from '../config';
-import Sidebar from '../components/Sidebar.vue';
+import TokenService from '../../services/TokenService';
+import { baseURL, getImage, defaultAvatar } from '../../config';
+import Sidebar from '../../components/Sidebar.vue';
 
 // Setup Axios
 const axiosInstance = Axios.create({

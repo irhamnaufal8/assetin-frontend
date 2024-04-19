@@ -65,8 +65,8 @@ onMounted(() => {
             <!-- Loan Card -->
             <div class="flex max-[1100px]:flex-col items-center gap-2">
                 <div v-for="item in loans.slice(0, 2)" :key="item.id"
-                    class="w-full h-[142px] gap-4 p-4 border border-gray-200 rounded-xl">
-                    <div class="flex items-start">
+                    class="h-[142px] max-[1100px]:w-full w-1/2 gap-4 p-4 border border-gray-200 rounded-xl">
+                    <div class="flex items-start gap-6">
                         <img :src="getImage(item.inventory.photo)" alt="Loan Image"
                             class="w-28 h-28 rounded-md object-cover">
 
