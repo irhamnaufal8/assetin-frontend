@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
-import { baseURL, getImage } from '../../config';
+import { baseURL, getImage, studentFormatDate } from '../../config';
 import { RouterLink } from 'vue-router';
 import Sidebar from '../../components/Sidebar.vue';
 
@@ -55,14 +55,15 @@ onMounted(() => {
         <div v-if="loans.length">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold">Your requests</h1>
-                <RouterLink to="/history" class="font-semibold text-primary flex items-center">
+                <RouterLink to="/history"
+                    class="flex items-center font-semibold text-primary hover:text-gray-500 transition-colors">
                     See All
                     <span class="material-symbols-outlined">chevron_right</span>
                 </RouterLink>
             </div>
 
             <!-- Loan Card -->
-            <div class="flex items-center gap-2">
+            <div class="flex max-[1100px]:flex-col items-center gap-2">
                 <div v-for="item in loans.slice(0, 2)" :key="item.id"
                     class="w-full h-[142px] gap-4 p-4 border border-gray-200 rounded-xl">
                     <div class="flex items-start">
@@ -76,7 +77,9 @@ onMounted(() => {
                             </p>
                             <p class="text-lg font-bold text-gray-700">{{ item.inventory.name }}</p>
                             <p class="text-sm font-semibold text-gray-500">Take it at {{ item.pickup_location }}</p>
-                            <p class="text-sm font-semibold text-primary mt-1">Deadline: {{ item.due_date }}</p>
+                            <p class="text-sm font-semibold text-primary mt-1">Deadline: {{
+            studentFormatDate(item.due_date) }}
+                            </p>
                         </div>
                         <div v-else class="flex flex-col w-full">
                             <p
@@ -87,6 +90,70 @@ onMounted(() => {
                             <p class="text-sm font-semibold text-gray-500">Still processing..</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Category -->
+        <div class="mt-8">
+            <h1 class="text-2xl font-bold mb-4">Need something?</h1>
+
+            <!-- Grid: Inventory -->
+            <div class="container">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/furniture.png" alt="Furniture Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Furniture
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/music.png" alt="Music Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Music
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/classroom.png" alt="Classroom Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Classroom
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/laboratory.png" alt="Laboratory Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Laboratory
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/sports.png" alt="Sports Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Sports
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/inventory" class="relative">
+                        <img src="/assets/library.png" alt="Library Inventory"
+                            class="object-cover w-full h-[108px] rounded-lg">
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-45 hover:bg-opacity-60 transition-all flex items-center justify-center text-white font-semibold hover:text-lg rounded-lg">
+                            Library
+                        </div>
+                    </RouterLink>
                 </div>
             </div>
         </div>

@@ -13,6 +13,11 @@ export function formatDate(dateStr, formatStr = "EE, d MMM yyyy 'at' HH:mm") {
     return format(parsedDate, formatStr);
 }
 
+export function studentFormatDate(dateStr, formatStr = "d/M/y 'at' HH:mm") {
+    const parsedDate = parseISO(dateStr);
+    return format(parsedDate, formatStr);
+}
+
 export function formatDateForPicker(dateStr) {
     if (!dateStr) return '';
     const parsedDate = parseISO(dateStr);
