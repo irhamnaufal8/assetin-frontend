@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
@@ -31,9 +31,23 @@ const fetchLoans = async () => {
     }
 }
 
+// Announcement Data
+const announcements = ref([]);
+
+const fetchAnnouncement = async () => {
+    try {
+        const response = await axiosInstance.get('/articles');
+        announcements.value = response.data;
+    } catch (error) {
+        console.error('Fetch loans failed', error)
+    }
+}
+
 onMounted(() => {
     fetchLoans();
+    fetchAnnouncement();
 });
+
 
 </script>
 
@@ -51,9 +65,24 @@ onMounted(() => {
 
         <div class="pt-[100px]"></div>
 
+        <!-- Carousel Banner -->
+        <div class="carousel w-full rounded-xl">
+            <div v-for="(item, index) in announcements" :key="item.id" :id="`item-${item.id}`"
+                class="carousel-item w-full">
+                <a :href="item.link" class="w-full object-cover h-80">
+                    <img :src="getImage(item.banner)" class="w-full object-cover h-80" />
+                </a>
+            </div>
+        </div>
+        <!-- Carousel Indicators -->
+        <div class="flex justify-center w-full pt-1 gap-2">
+            <p v-for="(item, index) in announcements" :key="item.id"
+                :class="['w-3 h-3 rounded-full', index === activeIndex ? 'bg-primary' : 'bg-gray-300']"></p>
+        </div>
+
         <!-- User Loan Request -->
         <div v-if="loans.length">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center my-4">
                 <h1 class="text-2xl font-bold">Your requests</h1>
                 <RouterLink to="/history"
                     class="flex items-center font-semibold text-primary hover:text-gray-500 transition-colors">
@@ -78,7 +107,7 @@ onMounted(() => {
                             <p class="text-lg font-bold text-gray-700">{{ item.inventory.name }}</p>
                             <p class="text-sm font-semibold text-gray-500">Take it at {{ item.pickup_location }}</p>
                             <p class="text-sm font-semibold text-primary mt-1">Deadline: {{
-            studentFormatDate(item.due_date) }}
+                studentFormatDate(item.due_date) }}
                             </p>
                         </div>
                         <div v-else class="flex flex-col w-full">
