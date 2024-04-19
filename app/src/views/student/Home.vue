@@ -157,5 +157,22 @@ onMounted(() => {
                 </div>
             </div>
         </div>
+
+        <hr class="my-8">
+
+        <!-- App Banner -->
+        <div class="flex gap-6 items-center w-full bg-secondary rounded-xl">
+            <img src="/assets/app-banner.png" alt="App Banner" class="w-1/3 rounded-xl">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Download our mobile apps</h1>
+                <h1 class="text-xl text-gray-500 mb-4">Unlock convenience on-the-go!</h1>
+
+                <div class="flex items-center gap-2">
+                    <img src="/assets/playstore.png" alt="Play Store" class="w-32">
+                    <img src="/assets/appstore.png" alt="App Store" class="w-32">
+                </div>
+            </div>
+        </div>
     </div>
 </template>
