@@ -103,7 +103,8 @@ const fetchUser = async () => {
                     </RouterLink>
                 </div>
 
-                <RouterLink to="/history" class="btn justify-start shadow-none border-none"
+                <RouterLink v-show="TokenService.isStudent()" to="/history"
+                    class="btn justify-start shadow-none border-none"
                     :class="route.path === '/history' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
                     <span class="material-symbols-outlined">history</span>
                     History

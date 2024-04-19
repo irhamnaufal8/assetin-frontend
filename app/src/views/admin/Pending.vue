@@ -77,11 +77,13 @@ onMounted(() => {
 
         <!-- Chips for filtering -->
         <div v-if="TokenService.isSuperAdmin()" class="flex space-x-3 mb-4 pt-[100px]">
-            <button class="btn" :class="currentTab === 'all' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="currentTab === 'all' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchPendingUsers('all')">All</button>
-            <button class="btn" :class="currentTab === 'siswa' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full"
+                :class="currentTab === 'siswa' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchPendingUsers('siswa')">Student</button>
-            <button class="btn" :class="currentTab === 'admin' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full"
+                :class="currentTab === 'admin' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchPendingUsers('admin')">Admin</button>
         </div>
 

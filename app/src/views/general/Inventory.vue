@@ -194,19 +194,19 @@ onMounted(() => {
 
         <!-- Chips for filtering -->
         <div class="flex space-x-3 mb-4 pt-[100px]">
-            <button class="btn" :class="!category ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="!category ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(null)">All</button>
-            <button class="btn" :class="category === 1 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 1 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(1)">Furniture</button>
-            <button class="btn" :class="category === 2 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 2 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(2)">Music</button>
-            <button class="btn" :class="category === 3 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 3 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(3)">Classroom</button>
-            <button class="btn" :class="category === 4 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 4 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(4)">Laboratory</button>
-            <button class="btn" :class="category === 5 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 5 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(5)">Sports</button>
-            <button class="btn" :class="category === 6 ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="category === 6 ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchInventories(6)">Library</button>
         </div>
 

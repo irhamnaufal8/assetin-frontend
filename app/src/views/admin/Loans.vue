@@ -125,11 +125,11 @@ onMounted(() => {
 
         <!-- Chips for filtering -->
         <div class="flex space-x-3 mb-4 pt-[100px]">
-            <button class="btn" :class="status === 'REQUEST' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="status === 'REQUEST' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchLoans('REQUEST')">Requested</button>
-            <button class="btn" :class="status === 'READY' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="status === 'READY' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchLoans('READY')">Ready</button>
-            <button class="btn" :class="status === 'ON-GOING' ? 'bg-primary text-white' : ''"
+            <button class="btn rounded-full" :class="status === 'ON-GOING' ? 'bg-orange-100 border border-primary' : ''"
                 @click="fetchLoans('ON-GOING')">On Going</button>
         </div>
 
@@ -181,9 +181,9 @@ onMounted(() => {
                 loanToEdit.user.nip }})</p>
                 </div>
                 <hr class="my-4">
-                <div class="flex">
+                <div class="flex gap-4">
                     <img :src="getImage(loanToEdit.inventory.photo)" alt="Inventory Image"
-                        class="h-32 w-32 rounded-full object-cover">
+                        class="h-32 w-32 rounded-md object-cover">
                     <div class="w-full">
 
                         <h3 class="font-bold text-lg mb-1">{{ loanToEdit.inventory.name }}</h3>
