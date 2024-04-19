@@ -21,6 +21,11 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/announcement',
+        component: () => import('@/admin/Announcement.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/home',
         component: () => import('@/student/Home.vue'),
         meta: { requiresAuth: true }

@@ -95,6 +95,14 @@ const fetchUser = async () => {
                     </RouterLink>
                 </div>
 
+                <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
+                    <RouterLink to="/announcement" class="btn justify-start shadow-none border-none w-full"
+                        :class="route.path === '/announcement' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        <span class="material-symbols-outlined">campaign</span>
+                        Announcement
+                    </RouterLink>
+                </div>
+
                 <div v-if="TokenService.isStudent()" class="w-full">
                     <RouterLink to="/home" class="btn justify-start shadow-none border-none w-full"
                         :class="(route.path === '/home' || route.path.includes('/inventory')) ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
