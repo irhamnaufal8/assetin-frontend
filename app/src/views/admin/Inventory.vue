@@ -103,6 +103,17 @@ const updateInventory = async (image) => {
     }
 }
 
+// Delete Inventory
+const deleteAction = async () => {
+    try {
+        await axiosInstance.delete(`/inventories/${inventoryToEdit.value.id}`, bearerToken);
+        fetchInventories(category.value);
+        modal.value.show = false;
+    } catch (error) {
+        console.error('Delete inventory failed', error);
+    }
+};
+
 // Detail Modal
 const modal = ref({
     show: false,
@@ -173,7 +184,7 @@ onMounted(() => {
                 <tr v-for="item in inventories" :key="item.id">
                     <td class="flex justify-center">
                         <img :src="getImage(item.photo)" alt="Inventory Image"
-                            class="h-20 w-20 rounded-full object-cover">
+                            class="h-20 w-20 rounded-md object-cover">
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.category.name }}</td>
@@ -242,6 +253,25 @@ onMounted(() => {
                 <div class="modal-action">
                     <button class="btn bg-primary text-white w-full" @click="updateAction" :disabled="isDisabled">{{
                     modal.type === 'add' ? 'Create Inventory' : 'Edit Inventory' }}</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for delete inventory -->
+        <div v-if="modal.show && modal.type === 'delete'" class="modal modal-open">
+            <div class="modal-box">
+                <p class="text-xl font-bold">Are you sure you want to delete this inventory?</p>
+                <div class="flex items-center gap-4 mt-4">
+                    <img :src="getImage(inventoryToEdit.photo)" class="w-40 h-40 object-cover rounded-lg">
+                    <div>
+                        <h1 class="text-lg font-bold">{{ inventoryToEdit.name }}</h1>
+                        <h1>Category: {{ inventoryToEdit.category.name }}</h1>
+                        <h1>Quantity: {{ inventoryToEdit.quantity_available }}</h1>
+                    </div>
+                </div>
+                <div class="modal-action">
+                    <button class="btn bg-red-100 text-red-500 w-56" @click="deleteAction">Delete</button>
+                    <button class="btn bg-primary text-white w-56" @click="modal = false">Cancel</button>
                 </div>
             </div>
         </div>

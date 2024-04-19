@@ -149,7 +149,7 @@ onMounted(() => {
                 <tr v-for="item in loans" :key="item.id">
                     <td class="flex justify-center">
                         <img :src="getImage(item.inventory.photo)" alt="Inventory Image"
-                            class="h-20 w-20 rounded-full object-cover">
+                            class="h-20 w-20 rounded-md object-cover">
                     </td>
                     <td>{{ item.inventory.name }}</td>
                     <td>{{ item.quantity }}</td>
