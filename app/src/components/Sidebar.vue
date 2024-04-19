@@ -72,7 +72,7 @@ const fetchUser = async () => {
             <div class="flex flex-col gap-3">
                 <div v-if="TokenService.isAdmin() || TokenService.isSuperAdmin()" class="w-full">
                     <RouterLink to="/inventory" class="btn justify-start shadow-none border-none w-full"
-                        :class="route.path === '/inventory' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        :class="route.path.includes('/inventory') ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
                         <span class="material-symbols-outlined">inventory_2</span>
                         Inventories
                     </RouterLink>
@@ -96,7 +96,7 @@ const fetchUser = async () => {
 
                 <div v-if="TokenService.isStudent()" class="w-full">
                     <RouterLink to="/home" class="btn justify-start shadow-none border-none w-full"
-                        :class="route.path === '/home' ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
+                        :class="(route.path === '/home' || route.path.includes('/inventory')) ? 'bg-primary text-white' : 'bg-transparent text-gray-600'">
                         <span class="material-symbols-outlined">home</span>
                         Home
                     </RouterLink>

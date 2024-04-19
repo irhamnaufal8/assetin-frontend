@@ -101,7 +101,7 @@ onMounted(() => {
             <!-- Grid: Inventory -->
             <div class="container">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/1" class="relative">
                         <img src="/assets/furniture.png" alt="Furniture Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -110,7 +110,7 @@ onMounted(() => {
                         </div>
                     </RouterLink>
 
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/2" class="relative">
                         <img src="/assets/music.png" alt="Music Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -119,7 +119,7 @@ onMounted(() => {
                         </div>
                     </RouterLink>
 
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/3" class="relative">
                         <img src="/assets/classroom.png" alt="Classroom Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -128,7 +128,7 @@ onMounted(() => {
                         </div>
                     </RouterLink>
 
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/4" class="relative">
                         <img src="/assets/laboratory.png" alt="Laboratory Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -137,7 +137,7 @@ onMounted(() => {
                         </div>
                     </RouterLink>
 
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/5" class="relative">
                         <img src="/assets/sports.png" alt="Sports Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -146,7 +146,7 @@ onMounted(() => {
                         </div>
                     </RouterLink>
 
-                    <RouterLink to="/inventory" class="relative">
+                    <RouterLink to="/inventory/6" class="relative">
                         <img src="/assets/library.png" alt="Library Inventory"
                             class="object-cover w-full h-[108px] rounded-lg">
                         <div
@@ -168,9 +168,9 @@ onMounted(() => {
                 <h1 class="text-3xl font-bold text-gray-800">Download our mobile apps</h1>
                 <h1 class="text-xl text-gray-500 mb-4">Unlock convenience on-the-go!</h1>
 
-                <div class="flex items-center gap-2">
-                    <img src="/assets/playstore.png" alt="Play Store" class="w-32">
-                    <img src="/assets/appstore.png" alt="App Store" class="w-32">
+                <div class="flex items-center gap-2 w-1/5">
+                    <img src="/assets/playstore.png" alt="Play Store" class="w-full">
+                    <img src="/assets/appstore.png" alt="App Store" class="w-full">
                 </div>
             </div>
         </div>

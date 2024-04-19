@@ -4,6 +4,7 @@ import { onMounted, ref, computed } from 'vue';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
 import { baseURL, getImage } from '../../config';
+import { useRoute } from 'vue-router';
 
 // Setup Axios
 const axiosInstance = Axios.create({
@@ -133,8 +134,15 @@ const isDisabled = computed(() => {
     return !inventoryToEdit.value.name || !inventoryToEdit.value.category_id || !inventoryToEdit.value.quantity_available || (!inventoryToEdit.value.photo && !previewImage.value);
 });
 
+// Route
+const route = useRoute();
+
 onMounted(() => {
-    fetchInventories();
+    const categoryId = parseInt(route.params.categoryId, 10);
+    if (!isNaN(categoryId)) {
+        category.value = categoryId;
+    }
+    fetchInventories(category.value);
 });
 </script>
 
