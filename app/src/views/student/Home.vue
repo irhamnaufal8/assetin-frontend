@@ -206,7 +206,7 @@ onMounted(() => {
 
 <style>
 .swiper-pagination-bullet {
-    background: #E7E8F2;
+    background: #a7a8b0;
     opacity: 1;
 }
 
