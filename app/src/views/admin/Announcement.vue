@@ -1,5 +1,6 @@
 <script setup>
 import Sidebar from '../../components/Sidebar.vue';
+import Empty from '../../components/Empty.vue';
 import { onMounted, ref, computed } from 'vue';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
@@ -172,7 +173,7 @@ onMounted(() => {
                 </tr>
             </tbody>
         </table>
-        <p v-show="!dataList.length" class="text-center pt-[100px]">There's no data here.</p>
+        <Empty v-show="!dataList.length" class="pt-[100px]" />
 
         <!-- Modal for update data -->
         <div v-if="modal.show && modal.type !== 'delete'" class="modal modal-open">

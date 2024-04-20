@@ -5,6 +5,7 @@ import Axios from 'axios';
 import TokenService from '../../services/TokenService';
 import { baseURL, getImage, formatDateForRequest } from '../../config';
 import { useRoute } from 'vue-router';
+import Empty from '../../components/Empty.vue';
 
 // Setup Axios
 const axiosInstance = Axios.create({
@@ -241,7 +242,7 @@ onMounted(() => {
                 </tr>
             </tbody>
         </table>
-        <p v-else class="text-center mt-8">There's no data here.</p>
+        <Empty v-else />
 
         <!-- Modal for edit inventory -->
         <div v-if="modal.show && modal.type !== 'delete' && !TokenService.isStudent()" class="modal modal-open">

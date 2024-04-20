@@ -1,5 +1,6 @@
 <script setup>
 import Sidebar from '../../components/Sidebar.vue';
+import Empty from '../../components/Empty.vue';
 import { onMounted, ref, computed } from 'vue';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
@@ -163,7 +164,7 @@ onMounted(() => {
                 </tr>
             </tbody>
         </table>
-        <p v-else class="text-center mt-8">There's no data here.</p>
+        <Empty v-else />
 
         <!-- Modal for confirmation -->
         <div v-if="showModal" class="modal modal-open">

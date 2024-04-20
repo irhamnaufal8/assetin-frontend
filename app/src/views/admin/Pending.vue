@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue';
 import Axios, { all } from 'axios';
 import TokenService from '../../services/TokenService';
 import { baseURL } from '../../config';
+import Empty from '../../components/Empty.vue';
 
 // Setup Axios
 const axiosInstance = Axios.create({
@@ -111,7 +112,7 @@ onMounted(() => {
                     </tr>
                 </tbody>
             </table>
-            <p v-else class="text-center mt-8">There's no pending user here.</p>
+            <Empty v-else />
         </div>
     </div>
 
