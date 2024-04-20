@@ -1,11 +1,16 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Axios from 'axios';
 import TokenService from '../../services/TokenService';
 import { baseURL, getImage, studentFormatDate } from '../../config';
 import { RouterLink } from 'vue-router';
 import Sidebar from '../../components/Sidebar.vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const router = useRouter();
 const showLogoutModal = ref(false);
@@ -47,8 +52,6 @@ onMounted(() => {
     fetchLoans();
     fetchAnnouncement();
 });
-
-
 </script>
 
 <template>
@@ -65,20 +68,15 @@ onMounted(() => {
 
         <div class="pt-[100px]"></div>
 
-        <!-- Carousel Banner -->
-        <div class="carousel w-full rounded-xl">
-            <div v-for="(item, index) in announcements" :key="item.id" :id="`item-${item.id}`"
-                class="carousel-item w-full">
-                <a :href="item.link" class="w-full object-cover h-80">
-                    <img :src="getImage(item.banner)" class="w-full object-cover h-80" />
-                </a>
-            </div>
-        </div>
-        <!-- Carousel Indicators -->
-        <div class="flex justify-center w-full pt-1 gap-2">
-            <p v-for="(item, index) in announcements" :key="item.id"
-                :class="['w-3 h-3 rounded-full', index === activeIndex ? 'bg-primary' : 'bg-gray-300']"></p>
-        </div>
+        <swiper :pagination="true" :modules="[Pagination]">
+            <swiper-slide v-for="item in announcements" :key="item.id" :id="item.id" class="w-full">
+                <div class="pb-8">
+                    <a :href="item.link" class="w-full object-cover h-[280px]">
+                        <img :src="getImage(item.banner)" class="w-full object-cover h-[280px] rounded-xl" />
+                    </a>
+                </div>
+            </swiper-slide>
+        </swiper>
 
         <!-- User Loan Request -->
         <div v-if="loans.length">
@@ -107,7 +105,7 @@ onMounted(() => {
                             <p class="text-lg font-bold text-gray-700">{{ item.inventory.name }}</p>
                             <p class="text-sm font-semibold text-gray-500">Take it at {{ item.pickup_location }}</p>
                             <p class="text-sm font-semibold text-primary mt-1">Deadline: {{
-                studentFormatDate(item.due_date) }}
+            studentFormatDate(item.due_date) }}
                             </p>
                         </div>
                         <div v-else class="flex flex-col w-full">
@@ -205,3 +203,14 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style>
+.swiper-pagination-bullet {
+    background: #E7E8F2;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #F19C40;
+}
+</style>
